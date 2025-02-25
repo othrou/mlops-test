@@ -1,0 +1,35 @@
+name: othmane-mlops-tests
+
+# This event triggers the workflow when there's a push to the repository
+on: [push]  # Trigger the workflow on push events (e.g., pushing to the repository)
+
+jobs:
+  run:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+
+    # Optionally, you can use a custom container with specific tools such as DVC and CML
+    
+    container: container: docker://dvcor/cml-py3:latest
+
+    steps:
+      # Checkout the repository so that the workflow can access its files
+      - uses: actions/checkout@v3  # This step checks out the repository
+
+      # - uses: actions/setup-python@v4  # This step sets up Python
+      #   with:
+      #     python-version: '3.x'  # You can specify the Python version
+
+      # Setup CML (Continuous Machine Learning)
+      - uses: iterative/setup-cml@v1  # This sets up CML tools
+
+      # Step to train the machine learning model
+      - name: Train model  # Step name
+        run: |
+          # Install the required dependencies from the requirements file
+          pip install -r requirements.txt  
+          
+          # Run your Python training script
+          python housing_prediction.py  # This executes the training script to train your model
+
+          ECHO "Model Metrics"
+          cat metrics.txt
